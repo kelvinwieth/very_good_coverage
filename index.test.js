@@ -208,11 +208,11 @@ test('reports 0 coverage when no lines are found ', () => {
 test('fails when min_coverage is not a number', () => {
   const lcovPath = './fixtures/lcov.100.info';
   const minCoverage = '10%';
+  const ip = path.join(__dirname, 'index.js');
 
   process.env['INPUT_PATH'] = lcovPath;
   process.env['INPUT_MIN_COVERAGE'] = minCoverage;
 
-  const ip = path.join(__dirname, 'index.js');
   try {
     cp.execSync(`node ${ip}`, { env: process.env }).toString();
     fail('this code should fail');
