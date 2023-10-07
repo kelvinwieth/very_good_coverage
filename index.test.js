@@ -204,3 +204,22 @@ test('reports 0 coverage when no lines are found ', () => {
     expect(errorMessage).toContain('0 is less than min_coverage 100');
   }
 });
+
+test('fails when min_coverage is not a number', () => {
+  const lcovPath = './fixtures/lcov.100.info';
+  const minCoverage = '10%';
+
+  process.env['INPUT_PATH'] = lcovPath;
+  process.env['INPUT_MIN_COVERAGE'] = minCoverage;
+
+  const ip = path.join(__dirname, 'index.js');
+  try {
+    cp.execSync(`node ${ip}`, { env: process.env }).toString();
+    fail('this code should fail');
+  } catch (err) {
+    let output = getErrorOutput(err);
+    expect(output).toContain(
+      '❌ Invalid min_coverage value. Make sure to enter a numeric value.',
+    );
+  }
+});
