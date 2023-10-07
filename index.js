@@ -9,7 +9,7 @@ function run() {
   const excluded = core.getInput('exclude');
   const excludedFiles = excluded.split(' ');
 
-  if (!canParse(lcovPath)) {
+  if (!canParse(lcovPath) || !canUseMinCoverage(minCoverage)) {
     return;
   }
 
@@ -100,6 +100,19 @@ For example:
 An empty lcov file was found but with no coverage data. This might be because \
 you have no test files or your tests are not generating any coverage data.
 `,
+    );
+    return false;
+  }
+
+  return true;
+}
+
+function canUseMinCoverage(minCoverage) {
+  let asNumber = Number(minCoverage);
+
+  if (isNaN(asNumber)) {
+    core.setFailed(
+      '❌ Invalid min_coverage value. Make sure to enter a numeric value.',
     );
     return false;
   }
